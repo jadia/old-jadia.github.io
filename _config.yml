@@ -11,7 +11,7 @@ tagline:          'My Brain Dump'
 #description:      'A brazen two-column <a href="http://jekyllrb.com" target="_blank">Jekyll</a> theme that pairs a prominent sidebar with uncomplicated content. Made by <a href="https://twitter.com/mdo" target="_blank">@mdo</a>.'
 description:      'Let me dump whatever I know on the Internet.'
 url:              http://th3karkota.github.io
-baseurl:          /
+baseurl:          http://th3karkota.github.io/
 
 author:
   name:           'Nitish Jadia'
