@@ -12,16 +12,20 @@ I had a NTFS hard disk mounted using `/etc/fstab` on `/mnt/data`. Whenever I del
 
 It seems like we had trouble with some permissions related to trash.
 The following was my `/etc/fstab` entry.
+
 ```bash
 UUID=EA10ABB810AB8A61 /mnt/data ntfs-3g defaults       0 0
 ```
 
 **Solution:**
 Find what is the user id.
+
 ```bash
 id
 ```
+
 My user id is: 1000. So, I change my `/etc/fstab` entry to
+
 ```bash
 UUID=EA10ABB810AB8A61 /mnt/data ntfs-3g defaults,uid=1000       0 0
 ```
