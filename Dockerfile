@@ -1,5 +1,9 @@
 # jekyll Docker container to run the website
 
+# USE: docker run --rm \
+#  --volume="$PWD:/srv/jekyll" \
+#  -p 8000:4000 -it nitish/jekyll
+
 FROM jekyll/jekyll 
 LABEL maintainer="nitish@jadia.dev" 
 LABEL version="1.0"
