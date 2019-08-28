@@ -1,9 +1,11 @@
 # Ignore custom
 CNAME
+**.jekyll-cache/
+*.old
 
 # Ignore docs files
 _gh_pages
-_site
+#_site
 .ruby-version
 
 # Numerous always-ignore extensions

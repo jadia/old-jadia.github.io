@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+    How Linux Trash works &middot; Nitish Jadia
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144"
+    href="/public/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/public/aku-144.png">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+<body class="theme-base-0d">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-61932410-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-61932410-3');
+  </script>
+
+  <link href='https://fonts.googleapis.com/css?family=Metal Mania' rel='stylesheet'>
+<style>
+  .title-font {
+    font-family: 'Metal Mania';
+    font-size: 62px;
+  }
+</style>
+<div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h2 class="title-font">
+        <a href="/">
+          Nitish Jadia
+        </a>
+      </h2>
+      <p class="lead">Pouring my thoughts out!</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item"
+        href="/">Home</a>
+
+      
+
+      
+      
+      
+      
+      
+      
+      
+      
+      <a class="sidebar-nav-item"
+        href="/about/">About</a>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <a class="sidebar-nav-item"
+        href="/posts/">Posts</a>
+      
+      
+      
+
+      <a class="sidebar-nav-item" href="http://nitishjadia.com" target="_blank">Blog</a>
+      <a class="sidebar-nav-item" href="https://github.com/jadia" target="_blank">GitHub</a>
+    </nav>
+
+    <p>&copy; 2019. All rights reserved.</p>
+  </div>
+</div>
+
+  <div class="content container">
+    <div class="post">
+  <h1 class="post-title">How Linux Trash works</h1>
+  <span class="post-date">21 Apr 2019</span>
+  <p>Notes:</p>
+
+<ul>
+  <li>accidently delete files - trash can saviour</li>
+  <li>for inexperienced user it’s two step process</li>
+  <li>earlier GNOME and KDE had their own trash mechanisms</li>
+  <li>
+    <p>Trash storage uses unix file system tree approach</p>
+  </li>
+  <li>Trash directory - a directory where trashed files and their info(original name/location, time of trashing,etc) are stored.</li>
+  <li>several trash dir possible on different mount locations</li>
+  <li>a user home directory SHOULD have a trash directory.</li>
+  <li>Home trash should be created for any new user.</li>
+  <li>Different implementations:
+    <ul>
+      <li>some may accept deleted files from other partitions too(network, removable disks).
+        <ul>
+          <li>this is a ‘failsafe’ option - other than home no other place will be filled.</li>
+          <li>con: costly file copying between partitions, network and removable</li>
+        </ul>
+      </li>
+      <li>But most OS choose not to support the above method of accepting deleted files from all over the system.</li>
+    </ul>
+  </li>
+  <li>On top directory (/ or /home) trashing can be done in two ways
+    <ol>
+      <li>Create an $topdir/<strong>.Trash</strong> directory and permit all users who can trash file to write in it. Sticky bit permission must be set. While deleting from non-home partition check for $topdir/.Trash</li>
+    </ol>
+  </li>
+</ul>
+
+<h4 id="resources">Resources</h4>
+
+<ol>
+  <li><a href="https://askubuntu.com/questions/27176/how-does-the-trash-can-work-and-where-can-i-find-official-documentation-refere">Ubuntu trash implementation</a></li>
+  <li><a href="https://specifications.freedesktop.org/trash-spec/trashspec-latest.html">Trash specification</a></li>
+</ol>
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2019/05/06/Nginx-introduction/">
+            Understanding NGINX
+            <small>06 May 2019</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2019/04/21/Cannot-move-to-trash/">
+            Cannot move to trash nfs mount error
+            <small>21 Apr 2019</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2019/04/20/Bitcoin-whitepaper-summary/">
+            Bitcoin Whitepaper Summary
+            <small>20 Apr 2019</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+  </div>
+
+</body>
+
+</html>

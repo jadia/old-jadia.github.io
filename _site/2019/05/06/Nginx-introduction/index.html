@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+    Understanding NGINX &middot; Nitish Jadia
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144"
+    href="/public/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/public/aku-144.png">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+<body class="theme-base-0d">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-61932410-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-61932410-3');
+  </script>
+
+  <link href='https://fonts.googleapis.com/css?family=Metal Mania' rel='stylesheet'>
+<style>
+  .title-font {
+    font-family: 'Metal Mania';
+    font-size: 62px;
+  }
+</style>
+<div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h2 class="title-font">
+        <a href="/">
+          Nitish Jadia
+        </a>
+      </h2>
+      <p class="lead">Pouring my thoughts out!</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item"
+        href="/">Home</a>
+
+      
+
+      
+      
+      
+      
+      
+      
+      
+      
+      <a class="sidebar-nav-item"
+        href="/about/">About</a>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <a class="sidebar-nav-item"
+        href="/posts/">Posts</a>
+      
+      
+      
+
+      <a class="sidebar-nav-item" href="http://nitishjadia.com" target="_blank">Blog</a>
+      <a class="sidebar-nav-item" href="https://github.com/jadia" target="_blank">GitHub</a>
+    </nav>
+
+    <p>&copy; 2019. All rights reserved.</p>
+  </div>
+</div>
+
+  <div class="content container">
+    <div class="post">
+  <h1 class="post-title">Understanding NGINX</h1>
+  <span class="post-date">06 May 2019</span>
+  <h2 id="introduction">Introduction</h2>
+
+<p>nginx is an alternative to webservers like Apache HTTP server. It was created to takle the <em>C10K</em> problem - 10,000 concurrent connections.</p>
+
+<!--more-->
+
+<p>Use cases:</p>
+
+<ul>
+  <li>High performance webserver</li>
+  <li>Reverse proxy
+    <ul>
+      <li>SSL/TLS termination</li>
+      <li>Content caching and compression</li>
+    </ul>
+  </li>
+  <li>Loadbalancer</li>
+</ul>
+
+<h3 id="apache-vs-nginx">Apache vs Nginx</h3>
+
+<h4 id="apache">Apache</h4>
+
+<ul>
+  <li>Directive based configuration language
+    <ul>
+      <li>Blocks of configuration looks similar to XML tags</li>
+    </ul>
+  </li>
+  <li>Multiple processing method
+    <ul>
+      <li>Pre-fork method
+        <ul>
+          <li>Multi-process server architecture</li>
+          <li>Do not use threads</li>
+        </ul>
+      </li>
+      <li>Worker method
+        <ul>
+          <li>Multi-thread/Multi-process server architecture</li>
+          <li>Thread enables less resource consumption than process based architecture</li>
+          <li>A pool of spare threads are on standby to server incoming requests.</li>
+        </ul>
+      </li>
+      <li>Event method
+        <ul>
+          <li>Similar to worker method but preferred for keep-alive connections</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Support third party modules
+    <ul>
+      <li>Dynamic - no need to compile when new modules are integrated</li>
+    </ul>
+  </li>
+  <li>Slow for serving static files</li>
+  <li>Concept of .htaccess files for directory localized configuration
+    <ul>
+      <li>instead of global config, enforce configuration on a sub-directory</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="nginx">Nginx</h4>
+
+<ul>
+  <li>Directive based configuration language
+    <ul>
+      <li>Keyword and it has some arguments.</li>
+      <li>Blocks of configuration use curly braces.</li>
+    </ul>
+  </li>
+  <li>One processing method
+    <ul>
+      <li>Handle concurrent requests</li>
+      <li>Worker process model - use threads when an event triggers it.</li>
+      <li>Asynchronous - helps in concurrency.</li>
+    </ul>
+  </li>
+  <li>Support third party modules
+    <ul>
+      <li>Dynamic - no need to compile when new modules are integrated</li>
+    </ul>
+  </li>
+  <li>Faster for serving static files</li>
+  <li>No concept equivalent to .htaccess files</li>
+  <li>Lightweight
+    <ul>
+      <li>works fine on lower end hardware</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="installation">Installation</h3>
+
+<p>Follow the official documentation: <a href="https://docs.nginx.com/nginx/admin-guide/installing-nginx/installing-nginx-open-source/">here</a></p>
+
+<p>I would recommend to install from the <code class="highlighter-rouge">Official NGINX Repository</code> by adding repository to your sources. This way we will get the latest nginx package.</p>
+
+<p>Automatically start nginx when the system boots:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl start nginx
+<span class="nb">sudo </span>systemctl enabled nginx
+</code></pre></div></div>
+
+<h2 id="nginx-as-web-server">Nginx as Web Server</h2>
+
+<p><code class="highlighter-rouge">/etc/nginx</code> contains all the configuration files.<br />
+<code class="highlighter-rouge">nginx.conf</code> main server configuration.<br />
+<code class="highlighter-rouge">conf.d</code> directory contains config files for virtual hosts</p>
+
+<h3 id="configuration">Configuration</h3>
+
+<h4 id="nginxconf">nginx.conf</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim /etc/nginx/nginx.conf
+</code></pre></div></div>
+
+<p>Inside the file we see multiple entries:</p>
+
+<div class="language-vim highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user  nginx;
+worker_processes  <span class="m">1</span>;
+</code></pre></div></div>
+<blockquote>
+  <p><code class="highlighter-rouge">user nginx;</code> -&gt; all the child processes runs as nginx user.<br />
+<code class="highlighter-rouge">worker_processes</code> -&gt; number of worker processes you want.</p>
+</blockquote>
+
+<div class="language-vim highlighter-rouge"><div class="highlight"><pre class="highlight"><code>error_log  <span class="sr">/var/</span>log<span class="sr">/nginx/</span>error<span class="p">.</span>log warn;
+pid        <span class="sr">/var/</span>run/nginx<span class="p">.</span>pid;
+</code></pre></div></div>
+<blockquote>
+  <p><code class="highlighter-rouge">pid</code> is the file you want as identifier the nginx is running.</p>
+</blockquote>
+
+<div class="language-vim highlighter-rouge"><div class="highlight"><pre class="highlight"><code>events <span class="p">{</span>
+    worker_connections  <span class="m">1024</span>;
+<span class="p">}</span>
+</code></pre></div></div>
+<blockquote>
+  <p><code class="highlighter-rouge">events</code> context is required. If removed, nginx won’t run (MANDATORY).<br />
+<code class="highlighter-rouge">worker_connections</code> -&gt; every worker process can have specified number of clients in it.</p>
+</blockquote>
+
+<div class="language-vim highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http <span class="p">{</span>
+    include       <span class="sr">/etc/</span>nginx/mime<span class="p">.</span>types;
+</code></pre></div></div>
+<p><code class="highlighter-rouge">http</code> specifies configuration for http handiling of nginx.</p>
+<blockquote>
+  <p><code class="highlighter-rouge">include</code>  break the configurations in separate chunks. Here, all the mime type definations are present in the dir and it tells nginx what context type it should return. Try reading <code class="highlighter-rouge">mime.types</code> file.</p>
+</blockquote>
+
+<div class="language-vim highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    default_type  application/octet<span class="p">-</span>stream;
+</code></pre></div></div>
+<blockquote>
+  <p><code class="highlighter-rouge">default_type</code> tells if something is not defined in mime.types it returns the default type.</p>
+</blockquote>
+
+<div class="language-vim highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    log_format  main  <span class="s1">'$remote_addr - $remote_user [$time_local] "$request" '</span>
+                      <span class="s1">'$status $body_bytes_sent "$http_referer" '</span>
+                      <span class="s1">'"$http_user_agent" "$http_x_forwarded_for"'</span>;
+
+    access_log  <span class="sr">/var/</span>log<span class="sr">/nginx/</span>access<span class="p">.</span>log  main;
+</code></pre></div></div>
+<blockquote>
+  <p>When someone access our server the logs are put in <code class="highlighter-rouge">access_log</code> in <code class="highlighter-rouge">log_format</code> format. Everything with <code class="highlighter-rouge">$</code> is a variable.</p>
+</blockquote>
+
+<div class="language-vim highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    sendfile        <span class="k">on</span>;
+    #tcp_nopush     <span class="k">on</span>;
+
+    keepalive_timeout  <span class="m">65</span>;
+
+    #gzip  <span class="k">on</span>;
+</code></pre></div></div>
+<blockquote>
+  <p><code class="highlighter-rouge">sendfile</code> will allow to use sendfile system call to deliver content, improve performance.</p>
+</blockquote>
+
+<div class="language-vim highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    include <span class="sr">/etc/</span>nginx<span class="sr">/conf.d/</span>*<span class="p">.</span><span class="k">conf</span>;
+<span class="p">}</span>
+</code></pre></div></div>
+<blockquote>
+  <p>This allows us to break up all virtual host connections into separate files.</p>
+</blockquote>
+
+<h4 id="defaultconf">default.conf</h4>
+
+<p>If <code class="highlighter-rouge">default.conf</code> doesn’t exist, you won’t be able to connect to the nginx webserver even if the service is running.</p>
+
+<p>Create <code class="highlighter-rouge">default.conf</code> file and put the below lines.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim /etc/nginx/conf.d/default.conf
+</code></pre></div></div>
+
+<div class="language-vim highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server <span class="p">{</span>
+        listen <span class="m">80</span> default_server;
+        server_name _;
+        root <span class="sr">/usr/</span>share<span class="sr">/nginx/</span>html;
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This directs any traffic to the server to <code class="highlighter-rouge">/usr/share/nginx/html/index.html</code> page.</p>
+
+<blockquote>
+  <p><code class="highlighter-rouge">server_name</code> has a ‘<code class="highlighter-rouge">_</code>’ after it. This represents that ANY traffic which does not specifies the virtual host will be redirected to default server page.</p>
+</blockquote>
+
+<p>Let’s create a virtual host for <code class="highlighter-rouge">example.com</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim /etc/nginx/conf.d/example.com.conf
+</code></pre></div></div>
+<div class="language-vim highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server <span class="p">{</span>
+        listen <span class="m">80</span>;
+        server_name example<span class="p">.</span><span class="k">com</span> www<span class="p">.</span>example<span class="p">.</span><span class="k">com</span>;
+        root <span class="sr">/var/</span>www<span class="sr">/example.com/</span>html;
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Put the index page for example.com as <code class="highlighter-rouge">/var/www/example.com/html/index.html</code></p>
+
+<p>Reload the service and try to access example.com</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl reload nginx.service
+curl <span class="nt">--header</span> <span class="s2">"Host: example.com"</span> localhost
+</code></pre></div></div>
+
+<h3 id="error-pages">Error pages</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl localhost/test.html
+</code></pre></div></div>
+
+<p>This will result in nginx default 404 page. We can customize these pages.
+We can also refer to <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#error_page">Official Documentation</a> for help.</p>
+
+<h4 id="defaultconf-1">default.conf</h4>
+
+<div class="language-vim highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server <span class="p">{</span>
+        listen <span class="m">80</span> default_server;
+        server_name _;
+        root <span class="sr">/usr/</span>share<span class="sr">/nginx/</span>html;
+
+        error_page <span class="m">404</span> /<span class="m">404</span><span class="p">.</span>html;
+<span class="p">}</span>
+</code></pre></div></div>
+<blockquote>
+  <p><code class="highlighter-rouge">error_page 404 /404.html;</code> will enable a custom 404 page located at <code class="highlighter-rouge">/usr/share/nginx/html/404.html</code></p>
+</blockquote>
+
+<p>Just add the page contents and reload the nginx service.</p>
+
+<h3 id="access-control">Access control</h3>
+
+<p>The <code class="highlighter-rouge">location</code> will give us power of enforce access control on a specific page or a number of pages using regex.</p>
+
+<p><a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#location">Docs</a> instructs to put the following lines in <code class="highlighter-rouge">/etc/nginx/conf.d/default.conf</code></p>
+
+<div class="language-vim highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location <span class="p">{</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The contents of the block can be found <a href="https://nginx.org/en/docs/http/ngx_http_auth_basic_module.html">here</a></p>
+
+<div class="language-vim highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location <span class="p">=</span> /admin<span class="p">.</span>html <span class="p">{</span>
+        auth_basic <span class="s2">"Login Required"</span>;
+        auth_basic_user_file <span class="sr">/etc/</span>nginx/<span class="p">.</span>htpasswd;
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Install <code class="highlighter-rouge">htpasswd</code> utility to generate <code class="highlighter-rouge">.htpasswd</code> file for <code class="highlighter-rouge">admin</code> user or any user.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get <span class="nb">install</span> <span class="nt">-y</span> apache2-utils
+<span class="nb">sudo </span>htpasswd <span class="nt">-c</span> /etc/nginx/.htpasswd admin
+</code></pre></div></div>
+<blockquote>
+  <p><code class="highlighter-rouge">output:</code><br />
+Adding password for user admin</p>
+</blockquote>
+
+<p>Create <code class="highlighter-rouge">admin.html</code></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo echo</span> <span class="s2">"&lt;h1&gt; Admin Page &lt;h2&gt;"</span> <span class="o">&gt;</span> /usr/share/nginx/html/admin.html
+</code></pre></div></div>
+
+<p>Check if all the configurations are correct:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>nginx <span class="nt">-t</span>
+</code></pre></div></div>
+<blockquote>
+  <p><code class="highlighter-rouge">output:</code><br />
+sudo nginx -t<br />
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok<br />
+nginx: configuration file /etc/nginx/nginx.conf test is successful</p>
+</blockquote>
+
+<p>Use <code class="highlighter-rouge">curl</code> to confirm authentication.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl localhost/admin.html
+</code></pre></div></div>
+<blockquote>
+  <p>This should result in <code class="highlighter-rouge">401 Error</code> page.</p>
+</blockquote>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-u</span> admin:password localhost/admin.html
+</code></pre></div></div>
+<blockquote>
+  <p>You must have access to the <code class="highlighter-rouge">admin.html</code> page.</p>
+</blockquote>
+
+<p>Now <code class="highlighter-rouge">default.conf</code> looks like this:</p>
+<div class="language-vim highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server <span class="p">{</span>
+        listen <span class="m">80</span> default_server;
+        server_name _;
+        root <span class="sr">/usr/</span>share<span class="sr">/nginx/</span>html;
+
+        location <span class="p">=</span> /admin<span class="p">.</span>html <span class="p">{</span>
+                auth_basic <span class="s2">"Login Required"</span>;
+                auth_basic_user_file <span class="sr">/etc/</span>nginx/<span class="p">.</span>htpasswd;
+        <span class="p">}</span>
+
+
+        error_page <span class="m">404</span> /<span class="m">404</span><span class="p">.</span>html;
+        error_page <span class="m">500</span> <span class="m">501</span> <span class="m">502</span> <span class="m">503</span> <span class="m">504</span> /<span class="m">50</span><span class="k">x</span><span class="p">.</span>html;
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="basic-nginx-security">Basic NGINX Security</h3>
+
+<h4 id="self-signed-certificates">Self-signed certificates</h4>
+
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2019/04/21/How-Linux-trash-works/">
+            How Linux Trash works
+            <small>21 Apr 2019</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2019/04/21/Cannot-move-to-trash/">
+            Cannot move to trash nfs mount error
+            <small>21 Apr 2019</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2019/04/20/Bitcoin-whitepaper-summary/">
+            Bitcoin Whitepaper Summary
+            <small>20 Apr 2019</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+  </div>
+
+</body>
+
+</html>

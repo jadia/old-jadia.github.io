@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+ <title>Nitish Jadia</title>
+ <link href="http://0.0.0.0:4000/atom.xml" rel="self"/>
+ <link href="http://0.0.0.0:4000/"/>
+ <updated>2019-08-28T14:11:06-05:00</updated>
+ <id>http://0.0.0.0:4000</id>
+ <author>
+   <name>Nitish Jadia</name>
+   <email></email>
+ </author>
+
+ 
+ <entry>
+   <title>Understanding NGINX</title>
+   <link href="http://0.0.0.0:4000/2019/05/06/Nginx-introduction/"/>
+   <updated>2019-05-06T00:00:00-05:00</updated>
+   <id>http://0.0.0.0:4000/2019/05/06/Nginx-introduction</id>
+   <content type="html">&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;nginx is an alternative to webservers like Apache HTTP server. It was created to takle the &lt;em&gt;C10K&lt;/em&gt; problem - 10,000 concurrent connections.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;Use cases:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;High performance webserver&lt;/li&gt;
+  &lt;li&gt;Reverse proxy
+    &lt;ul&gt;
+      &lt;li&gt;SSL/TLS termination&lt;/li&gt;
+      &lt;li&gt;Content caching and compression&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Loadbalancer&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;apache-vs-nginx&quot;&gt;Apache vs Nginx&lt;/h3&gt;
+
+&lt;h4 id=&quot;apache&quot;&gt;Apache&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Directive based configuration language
+    &lt;ul&gt;
+      &lt;li&gt;Blocks of configuration looks similar to XML tags&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Multiple processing method
+    &lt;ul&gt;
+      &lt;li&gt;Pre-fork method
+        &lt;ul&gt;
+          &lt;li&gt;Multi-process server architecture&lt;/li&gt;
+          &lt;li&gt;Do not use threads&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Worker method
+        &lt;ul&gt;
+          &lt;li&gt;Multi-thread/Multi-process server architecture&lt;/li&gt;
+          &lt;li&gt;Thread enables less resource consumption than process based architecture&lt;/li&gt;
+          &lt;li&gt;A pool of spare threads are on standby to server incoming requests.&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Event method
+        &lt;ul&gt;
+          &lt;li&gt;Similar to worker method but preferred for keep-alive connections&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Support third party modules
+    &lt;ul&gt;
+      &lt;li&gt;Dynamic - no need to compile when new modules are integrated&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Slow for serving static files&lt;/li&gt;
+  &lt;li&gt;Concept of .htaccess files for directory localized configuration
+    &lt;ul&gt;
+      &lt;li&gt;instead of global config, enforce configuration on a sub-directory&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;nginx&quot;&gt;Nginx&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Directive based configuration language
+    &lt;ul&gt;
+      &lt;li&gt;Keyword and it has some arguments.&lt;/li&gt;
+      &lt;li&gt;Blocks of configuration use curly braces.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;One processing method
+    &lt;ul&gt;
+      &lt;li&gt;Handle concurrent requests&lt;/li&gt;
+      &lt;li&gt;Worker process model - use threads when an event triggers it.&lt;/li&gt;
+      &lt;li&gt;Asynchronous - helps in concurrency.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Support third party modules
+    &lt;ul&gt;
+      &lt;li&gt;Dynamic - no need to compile when new modules are integrated&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Faster for serving static files&lt;/li&gt;
+  &lt;li&gt;No concept equivalent to .htaccess files&lt;/li&gt;
+  &lt;li&gt;Lightweight
+    &lt;ul&gt;
+      &lt;li&gt;works fine on lower end hardware&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;installation&quot;&gt;Installation&lt;/h3&gt;
+
+&lt;p&gt;Follow the official documentation: &lt;a href=&quot;https://docs.nginx.com/nginx/admin-guide/installing-nginx/installing-nginx-open-source/&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;I would recommend to install from the &lt;code class=&quot;highlighter-rouge&quot;&gt;Official NGINX Repository&lt;/code&gt; by adding repository to your sources. This way we will get the latest nginx package.&lt;/p&gt;
+
+&lt;p&gt;Automatically start nginx when the system boots:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl start nginx
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl enabled nginx
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;nginx-as-web-server&quot;&gt;Nginx as Web Server&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/nginx&lt;/code&gt; contains all the configuration files.&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt; main server configuration.&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;conf.d&lt;/code&gt; directory contains config files for virtual hosts&lt;/p&gt;
+
+&lt;h3 id=&quot;configuration&quot;&gt;Configuration&lt;/h3&gt;
+
+&lt;h4 id=&quot;nginxconf&quot;&gt;nginx.conf&lt;/h4&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;vim /etc/nginx/nginx.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Inside the file we see multiple entries:&lt;/p&gt;
+
+&lt;div class=&quot;language-vim highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;user  nginx;
+worker_processes  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;user nginx;&lt;/code&gt; -&amp;gt; all the child processes runs as nginx user.&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;worker_processes&lt;/code&gt; -&amp;gt; number of worker processes you want.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;language-vim highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;error_log  &lt;span class=&quot;sr&quot;&gt;/var/&lt;/span&gt;log&lt;span class=&quot;sr&quot;&gt;/nginx/&lt;/span&gt;error&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;log warn;
+pid        &lt;span class=&quot;sr&quot;&gt;/var/&lt;/span&gt;run/nginx&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;pid;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;pid&lt;/code&gt; is the file you want as identifier the nginx is running.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;language-vim highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;events &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    worker_connections  &lt;span class=&quot;m&quot;&gt;1024&lt;/span&gt;;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;events&lt;/code&gt; context is required. If removed, nginx won’t run (MANDATORY).&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;worker_connections&lt;/code&gt; -&amp;gt; every worker process can have specified number of clients in it.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;language-vim highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;http &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    include       &lt;span class=&quot;sr&quot;&gt;/etc/&lt;/span&gt;nginx/mime&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;types;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;http&lt;/code&gt; specifies configuration for http handiling of nginx.&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt;  break the configurations in separate chunks. Here, all the mime type definations are present in the dir and it tells nginx what context type it should return. Try reading &lt;code class=&quot;highlighter-rouge&quot;&gt;mime.types&lt;/code&gt; file.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;language-vim highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    default_type  application/octet&lt;span class=&quot;p&quot;&gt;-&lt;/span&gt;stream;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;default_type&lt;/code&gt; tells if something is not defined in mime.types it returns the default type.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;language-vim highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    log_format  main  &lt;span class=&quot;s1&quot;&gt;'$remote_addr - $remote_user [$time_local] &quot;$request&quot; '&lt;/span&gt;
+                      &lt;span class=&quot;s1&quot;&gt;'$status $body_bytes_sent &quot;$http_referer&quot; '&lt;/span&gt;
+                      &lt;span class=&quot;s1&quot;&gt;'&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;'&lt;/span&gt;;
+
+    access_log  &lt;span class=&quot;sr&quot;&gt;/var/&lt;/span&gt;log&lt;span class=&quot;sr&quot;&gt;/nginx/&lt;/span&gt;access&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;log  main;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;When someone access our server the logs are put in &lt;code class=&quot;highlighter-rouge&quot;&gt;access_log&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;log_format&lt;/code&gt; format. Everything with &lt;code class=&quot;highlighter-rouge&quot;&gt;$&lt;/code&gt; is a variable.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;language-vim highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    sendfile        &lt;span class=&quot;k&quot;&gt;on&lt;/span&gt;;
+    #tcp_nopush     &lt;span class=&quot;k&quot;&gt;on&lt;/span&gt;;
+
+    keepalive_timeout  &lt;span class=&quot;m&quot;&gt;65&lt;/span&gt;;
+
+    #gzip  &lt;span class=&quot;k&quot;&gt;on&lt;/span&gt;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sendfile&lt;/code&gt; will allow to use sendfile system call to deliver content, improve performance.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;language-vim highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    include &lt;span class=&quot;sr&quot;&gt;/etc/&lt;/span&gt;nginx&lt;span class=&quot;sr&quot;&gt;/conf.d/&lt;/span&gt;*&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;conf&lt;/span&gt;;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;This allows us to break up all virtual host connections into separate files.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&quot;defaultconf&quot;&gt;default.conf&lt;/h4&gt;
+
+&lt;p&gt;If &lt;code class=&quot;highlighter-rouge&quot;&gt;default.conf&lt;/code&gt; doesn’t exist, you won’t be able to connect to the nginx webserver even if the service is running.&lt;/p&gt;
+
+&lt;p&gt;Create &lt;code class=&quot;highlighter-rouge&quot;&gt;default.conf&lt;/code&gt; file and put the below lines.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;vim /etc/nginx/conf.d/default.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-vim highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        listen &lt;span class=&quot;m&quot;&gt;80&lt;/span&gt; default_server;
+        server_name _;
+        root &lt;span class=&quot;sr&quot;&gt;/usr/&lt;/span&gt;share&lt;span class=&quot;sr&quot;&gt;/nginx/&lt;/span&gt;html;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This directs any traffic to the server to &lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/share/nginx/html/index.html&lt;/code&gt; page.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;server_name&lt;/code&gt; has a ‘&lt;code class=&quot;highlighter-rouge&quot;&gt;_&lt;/code&gt;’ after it. This represents that ANY traffic which does not specifies the virtual host will be redirected to default server page.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Let’s create a virtual host for &lt;code class=&quot;highlighter-rouge&quot;&gt;example.com&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;vim /etc/nginx/conf.d/example.com.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-vim highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        listen &lt;span class=&quot;m&quot;&gt;80&lt;/span&gt;;
+        server_name example&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;com&lt;/span&gt; www&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;example&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;com&lt;/span&gt;;
+        root &lt;span class=&quot;sr&quot;&gt;/var/&lt;/span&gt;www&lt;span class=&quot;sr&quot;&gt;/example.com/&lt;/span&gt;html;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Put the index page for example.com as &lt;code class=&quot;highlighter-rouge&quot;&gt;/var/www/example.com/html/index.html&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Reload the service and try to access example.com&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl reload nginx.service
+curl &lt;span class=&quot;nt&quot;&gt;--header&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Host: example.com&quot;&lt;/span&gt; localhost
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;error-pages&quot;&gt;Error pages&lt;/h3&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl localhost/test.html
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This will result in nginx default 404 page. We can customize these pages.
+We can also refer to &lt;a href=&quot;https://nginx.org/en/docs/http/ngx_http_core_module.html#error_page&quot;&gt;Official Documentation&lt;/a&gt; for help.&lt;/p&gt;
+
+&lt;h4 id=&quot;defaultconf-1&quot;&gt;default.conf&lt;/h4&gt;
+
+&lt;div class=&quot;language-vim highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        listen &lt;span class=&quot;m&quot;&gt;80&lt;/span&gt; default_server;
+        server_name _;
+        root &lt;span class=&quot;sr&quot;&gt;/usr/&lt;/span&gt;share&lt;span class=&quot;sr&quot;&gt;/nginx/&lt;/span&gt;html;
+
+        error_page &lt;span class=&quot;m&quot;&gt;404&lt;/span&gt; /&lt;span class=&quot;m&quot;&gt;404&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;html;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;error_page 404 /404.html;&lt;/code&gt; will enable a custom 404 page located at &lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/share/nginx/html/404.html&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Just add the page contents and reload the nginx service.&lt;/p&gt;
+
+&lt;h3 id=&quot;access-control&quot;&gt;Access control&lt;/h3&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;location&lt;/code&gt; will give us power of enforce access control on a specific page or a number of pages using regex.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://nginx.org/en/docs/http/ngx_http_core_module.html#location&quot;&gt;Docs&lt;/a&gt; instructs to put the following lines in &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/nginx/conf.d/default.conf&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-vim highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;location &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The contents of the block can be found &lt;a href=&quot;https://nginx.org/en/docs/http/ngx_http_auth_basic_module.html&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-vim highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;location &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; /admin&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;html &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        auth_basic &lt;span class=&quot;s2&quot;&gt;&quot;Login Required&quot;&lt;/span&gt;;
+        auth_basic_user_file &lt;span class=&quot;sr&quot;&gt;/etc/&lt;/span&gt;nginx/&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;htpasswd;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Install &lt;code class=&quot;highlighter-rouge&quot;&gt;htpasswd&lt;/code&gt; utility to generate &lt;code class=&quot;highlighter-rouge&quot;&gt;.htpasswd&lt;/code&gt; file for &lt;code class=&quot;highlighter-rouge&quot;&gt;admin&lt;/code&gt; user or any user.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; apache2-utils
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;htpasswd &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; /etc/nginx/.htpasswd admin
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;output:&lt;/code&gt;&lt;br /&gt;
+Adding password for user admin&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Create &lt;code class=&quot;highlighter-rouge&quot;&gt;admin.html&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&amp;lt;h1&amp;gt; Admin Page &amp;lt;h2&amp;gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; /usr/share/nginx/html/admin.html
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Check if all the configurations are correct:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;nginx &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;output:&lt;/code&gt;&lt;br /&gt;
+sudo nginx -t&lt;br /&gt;
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok&lt;br /&gt;
+nginx: configuration file /etc/nginx/nginx.conf test is successful&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Use &lt;code class=&quot;highlighter-rouge&quot;&gt;curl&lt;/code&gt; to confirm authentication.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl localhost/admin.html
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;This should result in &lt;code class=&quot;highlighter-rouge&quot;&gt;401 Error&lt;/code&gt; page.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; admin:password localhost/admin.html
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;You must have access to the &lt;code class=&quot;highlighter-rouge&quot;&gt;admin.html&lt;/code&gt; page.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Now &lt;code class=&quot;highlighter-rouge&quot;&gt;default.conf&lt;/code&gt; looks like this:&lt;/p&gt;
+&lt;div class=&quot;language-vim highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        listen &lt;span class=&quot;m&quot;&gt;80&lt;/span&gt; default_server;
+        server_name _;
+        root &lt;span class=&quot;sr&quot;&gt;/usr/&lt;/span&gt;share&lt;span class=&quot;sr&quot;&gt;/nginx/&lt;/span&gt;html;
+
+        location &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; /admin&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;html &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                auth_basic &lt;span class=&quot;s2&quot;&gt;&quot;Login Required&quot;&lt;/span&gt;;
+                auth_basic_user_file &lt;span class=&quot;sr&quot;&gt;/etc/&lt;/span&gt;nginx/&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;htpasswd;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+
+        error_page &lt;span class=&quot;m&quot;&gt;404&lt;/span&gt; /&lt;span class=&quot;m&quot;&gt;404&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;html;
+        error_page &lt;span class=&quot;m&quot;&gt;500&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;501&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;502&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;503&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;504&lt;/span&gt; /&lt;span class=&quot;m&quot;&gt;50&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;html;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;basic-nginx-security&quot;&gt;Basic NGINX Security&lt;/h3&gt;
+
+&lt;h4 id=&quot;self-signed-certificates&quot;&gt;Self-signed certificates&lt;/h4&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>How Linux Trash works</title>
+   <link href="http://0.0.0.0:4000/2019/04/21/How-Linux-trash-works/"/>
+   <updated>2019-04-21T00:00:00-05:00</updated>
+   <id>http://0.0.0.0:4000/2019/04/21/How-Linux-trash-works</id>
+   <content type="html">&lt;p&gt;Notes:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;accidently delete files - trash can saviour&lt;/li&gt;
+  &lt;li&gt;for inexperienced user it’s two step process&lt;/li&gt;
+  &lt;li&gt;earlier GNOME and KDE had their own trash mechanisms&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Trash storage uses unix file system tree approach&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Trash directory - a directory where trashed files and their info(original name/location, time of trashing,etc) are stored.&lt;/li&gt;
+  &lt;li&gt;several trash dir possible on different mount locations&lt;/li&gt;
+  &lt;li&gt;a user home directory SHOULD have a trash directory.&lt;/li&gt;
+  &lt;li&gt;Home trash should be created for any new user.&lt;/li&gt;
+  &lt;li&gt;Different implementations:
+    &lt;ul&gt;
+      &lt;li&gt;some may accept deleted files from other partitions too(network, removable disks).
+        &lt;ul&gt;
+          &lt;li&gt;this is a ‘failsafe’ option - other than home no other place will be filled.&lt;/li&gt;
+          &lt;li&gt;con: costly file copying between partitions, network and removable&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;But most OS choose not to support the above method of accepting deleted files from all over the system.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;On top directory (/ or /home) trashing can be done in two ways
+    &lt;ol&gt;
+      &lt;li&gt;Create an $topdir/&lt;strong&gt;.Trash&lt;/strong&gt; directory and permit all users who can trash file to write in it. Sticky bit permission must be set. While deleting from non-home partition check for $topdir/.Trash&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;resources&quot;&gt;Resources&lt;/h4&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;https://askubuntu.com/questions/27176/how-does-the-trash-can-work-and-where-can-i-find-official-documentation-refere&quot;&gt;Ubuntu trash implementation&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://specifications.freedesktop.org/trash-spec/trashspec-latest.html&quot;&gt;Trash specification&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Cannot move to trash nfs mount error</title>
+   <link href="http://0.0.0.0:4000/2019/04/21/Cannot-move-to-trash/"/>
+   <updated>2019-04-21T00:00:00-05:00</updated>
+   <id>http://0.0.0.0:4000/2019/04/21/Cannot-move-to-trash</id>
+   <content type="html">&lt;p&gt;I had a NTFS hard disk mounted using &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/fstab&lt;/code&gt; on &lt;code class=&quot;highlighter-rouge&quot;&gt;/mnt/data&lt;/code&gt;. Whenever I delete a file it won’t go into the &lt;strong&gt;Trash&lt;/strong&gt;, instead it asks me to delete the file permanently. I had to find a way to enable the trash for this mount.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://0.0.0.0:4000/img/moveTrash/moveToTrash.png&quot; alt=&quot;Move to trash&quot; /&gt;&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;It seems like we had trouble with some permissions related to trash.
+The following was my &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/fstab&lt;/code&gt; entry.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;UUID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;EA10ABB810AB8A61 /mnt/data ntfs-3g defaults       0 0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Solution:&lt;/strong&gt;
+Find what is the user id.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;My user id is: 1000. So, I change my &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/fstab&lt;/code&gt; entry to&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;UUID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;EA10ABB810AB8A61 /mnt/data ntfs-3g defaults,uid&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1000       0 0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Soon I will be writing a post on How linux trash works for better understanding of this problem.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Bitcoin Whitepaper Summary</title>
+   <link href="http://0.0.0.0:4000/2019/04/20/Bitcoin-whitepaper-summary/"/>
+   <updated>2019-04-20T00:00:00-05:00</updated>
+   <id>http://0.0.0.0:4000/2019/04/20/Bitcoin-whitepaper-summary</id>
+   <content type="html">&lt;h2 id=&quot;bitcoin-a-peer-to-peer-electronic-cash-system&quot;&gt;Bitcoin: A Peer-to-Peer Electronic Cash System&lt;/h2&gt;
+
+&lt;h3 id=&quot;introduction&quot;&gt;Introduction&lt;/h3&gt;
+
+&lt;p&gt;Satoshi Nakamoto proposes an overarching solution to double spending problem using a peer-to-peer network which supports an electronic payment system based on cryptographic proof instead of trust unlike the the method used by financial institutions.
+A computational proof of the chronological order of transaction is generated by p2p distributed timestamp server. The reversal of transaction will be computationally impractical unless more than 50% of nodes are not intending to attack the network.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h3 id=&quot;transactions&quot;&gt;Transactions&lt;/h3&gt;
+
+&lt;p&gt;Each transaction is clubbed with the hash of the previous transaction and public key of next owner then signed by the person making this transaction. This forms a chain of transactions. This chain of digital signatures are called electronic coin.
+Solving double spending problem without any mediating third-party requires a node to be aware of all the transactions.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;The transactions must be publicly announced.&lt;/li&gt;
+  &lt;li&gt;All participants must agree on a single chronological order of all transactions.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;timestamp-server&quot;&gt;Timestamp Server&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://0.0.0.0:4000/img/blockchain/timestamp.png&quot; alt=&quot;Bitcoin timestamp&quot; /&gt;
+Timestamp server generates a hash of the current block, it also includes timestamp of previous block, hence forming a chain.&lt;/p&gt;
+
+&lt;h3 id=&quot;proof-of-work&quot;&gt;Proof of work&lt;/h3&gt;
+
+&lt;p&gt;The Proof-of-Work[PoW] involves guessing a nounce value which can generate a hash which starts with a required amount on zero bits. The block cannot be changed without redoing the work. This implies that to modify a past block, an attacker would have to redo the PoW for that block and all the blocks after it. Average work required is exponential in the number of zero bits required. PoW difficulty increases if blocks are being generated too fast.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Y=H ( X || k )&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;There exist no efficient algorithm to find value of &lt;code class=&quot;highlighter-rouge&quot;&gt;k&lt;/code&gt;(nounce).&lt;/p&gt;
+
+&lt;h3 id=&quot;network&quot;&gt;Network&lt;/h3&gt;
+
+&lt;p&gt;New transactions are broadcasted to all nodes, all the nodes collect new transactions into a block and try to find PoW for that block. When PoW is found, the block is broadcasted to all the nodes. The block is accepted by the nodes if all the transactions in the block are valid and not already spent. The hash of the accepted block is considered as previous hash.
+Nodes always consider longest chain to be the correct one and work on extending it.&lt;/p&gt;
+
+&lt;h3 id=&quot;incentive&quot;&gt;Incentive&lt;/h3&gt;
+
+&lt;p&gt;Just like gold miners adding gold to the circulation, the bitcoin miners too get paid as block reward when they are successful in their PoW, that means, with each new block, the bitcoin in the economy increases.The incentive can also be funded with transaction fees.
+The first transaction in a block is a special transaction that starts a new coin owned by the creator of the block.&lt;/p&gt;
+
+&lt;h3 id=&quot;saving-disk-space&quot;&gt;Saving disk space&lt;/h3&gt;
+
+&lt;p&gt;Instead of storing whole Merkle Tree, we can stubbing off the branches off the tree and keeping the block header with no transactions. The hash value in the block header keeps the integrity of all its sub-branches and transactions.&lt;/p&gt;
+
+&lt;h3 id=&quot;payment-verification&quot;&gt;Payment Verification&lt;/h3&gt;
+
+&lt;p&gt;A transaction can be verified by a user without running a full node network. It just has to keep a copy of block headers of the longest PoW chain. The user cannot check for validity of the transaction by himself because he won’t be having all the transactions with himself. He can just see that the transaction is a part of longest chain and this confirms that the transaction is valid. Verification requires executing only single hash.&lt;/p&gt;
+
+&lt;h3 id=&quot;privacy&quot;&gt;Privacy&lt;/h3&gt;
+
+&lt;p&gt;Privacy can be maintained by keeping public keys anonymous. It is advisable to use a new key pair for each transaction to keep them from being linked to a common owner.&lt;/p&gt;
+
+&lt;h3 id=&quot;security&quot;&gt;Security&lt;/h3&gt;
+
+&lt;p&gt;An attack can only try to change one of his own transactions to take back money he recently spent. The probability of a survival of a dishonest chain is fairly low.&lt;/p&gt;
+</content>
+ </entry>
+ 
+
+</feed>

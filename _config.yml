@@ -6,11 +6,11 @@ highlighter:      rouge
 permalink:        pretty
 
 # Setup
-title:            Th3Karkota
+title:            Nitish Jadia
 tagline:          'My Brain Dump'
 #description:      'A brazen two-column <a href="http://jekyllrb.com" target="_blank">Jekyll</a> theme that pairs a prominent sidebar with uncomplicated content. Made by <a href="https://twitter.com/mdo" target="_blank">@mdo</a>.'
-description:      'Let me dump whatever I know on the Internet.'
-url:              http://th3karkota.github.io
+description:      'Pouring my thoughts out!'
+url:              http://jadia.github.io
 baseurl:          /
 
 author:
@@ -23,7 +23,7 @@ paginate:         5
 version:          2.1.0
 
 github:
-  repo:           https://github.com/th3karkota
+  repo:           https://github.com/jadia
 
 gems:
   - jekyll-paginate
