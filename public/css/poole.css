@@ -428,3 +428,9 @@ a.pagination-item:hover {
     border-bottom-right-radius: 4px;
   }
 }
+
+.dp img {
+  border-radius: 50% !important;
+  max-width:100%;
+  height:auto;
+}

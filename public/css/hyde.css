@@ -254,9 +254,3 @@ a.sidebar-nav-item:focus {
 .theme-custom .sidebar {
   background-color: #ac4142;
 }
-
-.dp img {
-  border-radius: 50%;
-  max-width:100%;
-  height:auto;
-}
