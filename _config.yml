@@ -10,7 +10,7 @@ title:            Nitish Jadia
 tagline:          'My Brain Dump'
 #description:      'A brazen two-column <a href="http://jekyllrb.com" target="_blank">Jekyll</a> theme that pairs a prominent sidebar with uncomplicated content. Made by <a href="https://twitter.com/mdo" target="_blank">@mdo</a>.'
 description:      'Pouring my thoughts out!'
-url:              http://jadia.github.io
+url:              https://jadia.github.io
 baseurl:          /
 
 author:
