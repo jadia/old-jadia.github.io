@@ -227,12 +227,6 @@ blockquote p:last-child {
   }
 }
 
-.dp img {
-  border-radius: 50% !important;
-  max-width:100%;
-  height:auto;
-}
-
 img {
   display: block;
   max-width: 100%;
