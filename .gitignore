@@ -1,5 +1,5 @@
 # Ignore custom
-CNAME
+#CNAME
 **.jekyll-cache/
 *.old
 _site/
