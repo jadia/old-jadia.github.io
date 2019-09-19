@@ -1,4 +1,4 @@
-baseURL = "https://jadia.dev/"
+baseURL = "https://jadia-dev.netlify.com/"
 languageCode = "en"
 title = "Nitish Jadia"
 theme = "hyde-hyde"
