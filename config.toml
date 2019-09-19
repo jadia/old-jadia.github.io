@@ -1,0 +1,86 @@
+baseURL = "https://jadia.dev/"
+languageCode = "en"
+title = "Nitish Jadia"
+theme = "hyde-hyde"
+author = "Nitish Jadia"
+
+#googleAnalytics = ""
+#disqusShortname = ""
+enableRobotsTXT = true
+enableEmoji = true
+
+summarylength = 30
+paginate = 7
+
+[params]
+    author = "Nitish Jadia"
+    authorimage = "/images/jadia.jpeg"
+    themeColor = "theme-base-01"
+    layoutReverse = false
+    relatedPosts = false
+    dateformat = "Jan 2, 2006"
+    postNavigation = true
+    copyright = "Nitish"
+    showBuiltWith = true
+    mainSections = ["posts", "notes"]
+    highlightjs = true
+    highlightjsstyle = "obsidian"
+
+[permalinks]
+    posts = "/:slug/"
+
+[params.meta]
+    description = "Nitish Jadia's blog :: Just trying to RTFM!"
+    keywords = "blog,nitish,nitishjadia,jadia.dev,jadia,python,software,engineer,golang,programming,rant"
+
+[[menu.main]]
+    name = "Home"
+    identifier = "home"
+    weight = 50
+    url = "/"
+
+[[menu.main]]
+    name = "Posts"
+    weight = 100
+    identifier = "posts"
+    url = "/posts/"
+
+[[menu.main]]
+    name = "About"
+    identifier = "about"
+    weight = 300
+    url = "/about"
+
+[params.social]
+    github = "jadia"
+	twitter = "nitishjadia"
+    linkedin = "jadianitish"
+    keybase = "jadia"
+
+
+# https://gohugo.io/content-management/related
+[related]
+    # Only include matches with rank >= threshold. This is a normalized rank
+    # between 0 and 100.
+    threshold = 80
+    # To get stable "See also" sections we, by default, exclude newer related
+    # pages.
+    includeNewer = false
+    # Will lower case keywords in both queries and in the indexes.
+    toLower = false
+[[related.indices]]
+    name = "keywords"
+    weight = 150
+[[related.indices]]
+    name  = "author"
+    toLower = true
+    weight = 30
+[[related.indices]]
+    name  = "tags"
+    weight = 100
+[[related.indices]]
+    name  = "date"
+    weight = 10
+    pattern = "2006"
+
+

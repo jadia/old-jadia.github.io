@@ -1,24 +1,14 @@
-# jadia.dev | Th3Karkota.github.io
+# Jadia.dev 
 
-I'm using **Hyde** theme by [Mark Otto](https://github.com/mdo) as base and modified different configurations to suit my needs.
 
-## Deploy
-There is a Dockerfile to run this site on your local machine
-```bash
-git clone https://github.com/th3karkota/th3karkota.github.io.git
+Edits for content width:
+Change value in `themes/hyde-hyde/assets/scss/hyde-hyde/_variables.scss`:
 
-cd th3karkota.github.io
-
-docker build -t="jekyll:jadia.dev" .
-
-docker run --rm \
-  --volume="$PWD:/srv/jekyll" \
-  -p 4000:4000 -it jekyll:jadia.dev
+```css
+// content
+//$content-max-width: 38rem; // @ ~70 CPL
+$content-max-width: 60rem; // @ ~70 CPL
+$content-margin-left: $sidebar-width + 5rem;
+//$content-margin-left: $sidebar-width + 2rem;
+$content-margin-right: 2rem;
 ```
-You can now access the site by visiting: `http://localhost:4000`
-
-## License
-
-Open sourced under the [MIT license](LICENSE.md).
-
-<3
