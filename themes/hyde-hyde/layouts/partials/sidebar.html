@@ -1,9 +1,17 @@
 <!-- Sidebar -->
+<link href='https://fonts.googleapis.com/css?family=Metal Mania' rel='stylesheet'>
+<style>
+  .title-font {
+    font-family: 'Metal Mania';
+    font-size: 62px;
+  }
+</style>
+
 <div class="sidebar">
   <div class="container {{ with .Site.Params.sidebarSticky }}sidebar-sticky{{ end }}">
     <div class="sidebar-about">
       <span class="site__title">
-        <a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a>
+        <a href="{{ .Site.BaseURL }}" class="title-font">{{ .Site.Title }}</a>
       </span>
       {{ if and (isset .Site.Params "authorimage") (not (isset .Site.Params.social "gravatar")) }}
         {{ with .Site.Params.authorimage }}
