@@ -1,0 +1,24 @@
+{{ with .Site.Params.copyright }}
+<div class="copyright">
+  &copy; {{ now.Format "2006"}} {{ . | safeHTML }}
+  {{ with $.Site.Params.license }}
+    <a href="{{$.Site.Params.licenseURL | safeHTML}}">{{ . | safeHTML }}</a>
+  {{end}}
+</div>
+{{ end }}
+{{ with .Site.Params.showBuiltWith }}
+<div class="builtwith">
+Built with <a href="https://gohugo.io" rel="nofollow">Hugo</a>
+</div>
+<script>
+  if (window.netlifyIdentity) {
+    window.netlifyIdentity.on("init", user => {
+      if (!user) {
+        window.netlifyIdentity.on("login", () => {
+          document.location.href = "/admin/";
+        });
+      }
+    });
+  }
+</script>
+{{ end }}

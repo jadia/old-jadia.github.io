@@ -1,24 +1,22 @@
-# jadia.dev | Th3Karkota.github.io
+# Nitish Jadia's Tech blog | https://jadia.dev
 
-I'm using **Hyde** theme by [Mark Otto](https://github.com/mdo) as base and modified different configurations to suit my needs.
+This site uses [Hugo](https://gohugo.io/) along with [Hyde-Hyde](https://themes.gohugo.io/hyde-hyde/) theme.
 
-## Deploy
-There is a Dockerfile to run this site on your local machine
-```bash
-git clone https://github.com/th3karkota/th3karkota.github.io.git
+## Modifications
 
-cd th3karkota.github.io
+### Fix sidebar DP issue
 
-docker build -t="jekyll:jadia.dev" .
+[The issue](https://github.com/htr3n/hyde-hyde/issues/72#issuecomment-533411217) can be fixed by by removing `| replaceRE "^(/)+(.*)" "$2"` at line 18 in [layouts/partials/sidebar.html](layouts/partials/sidebar.html).
 
-docker run --rm \
-  --volume="$PWD:/srv/jekyll" \
-  -p 4000:4000 -it jekyll:jadia.dev
+### Increase content width
+
+Change value in `themes/hyde-hyde/assets/scss/hyde-hyde/_variables.scss`:
+
+```css
+ /* content */
+/* $content-max-width: 38rem; // @ ~70 CPL */
+$content-max-width: 60rem; // @ ~70 CPL
+$content-margin-left: $sidebar-width + 5rem;
+/* $content-margin-left: $sidebar-width + 2rem; */
+$content-margin-right: 2rem;
 ```
-You can now access the site by visiting: `http://localhost:4000`
-
-## License
-
-Open sourced under the [MIT license](LICENSE.md).
-
-<3
