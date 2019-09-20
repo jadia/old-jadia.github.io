@@ -5,7 +5,7 @@ theme = "hyde-hyde"
 author = "Nitish Jadia"
 
 #googleAnalytics = ""
-#disqusShortname = ""
+disqusShortname = "jadia-dev"
 enableRobotsTXT = true
 enableEmoji = true
 
@@ -17,11 +17,11 @@ paginate = 7
     authorimage = "images/jadia.jpeg"
     themeColor = "theme-base-01"
     layoutReverse = false
-    relatedPosts = false
+    relatedPosts = true
     dateformat = "Jan 2, 2006"
     postNavigation = true
     copyright = "Nitish"
-    showBuiltWith = true
+    showBuiltWith = false
     mainSections = ["posts", "notes"]
     highlightjs = true
     highlightjsstyle = "obsidian"

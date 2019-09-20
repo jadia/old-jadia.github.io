@@ -2,6 +2,15 @@
 title: "My First Post"
 date: 2019-09-19T20:14:14+05:30
 draft: false
+description: "My first post on the blog!"
+tags:
+    - Code
+    - go
+    - database
+    - go-db
+categories:
+    - Dev
+keywords: "First, Post, Database, Databases"
 ---
 
 This is my first post!
