@@ -1,4 +1,4 @@
-baseURL = "https://jadia-dev.netlify.com/"
+baseURL = "/"
 languageCode = "en"
 title = "Nitish Jadia"
 theme = "hyde-hyde"
@@ -14,7 +14,7 @@ paginate = 7
 
 [params]
     author = "Nitish Jadia"
-    authorimage = "/images/jadia.jpeg"
+    authorimage = "images/jadia.jpeg"
     themeColor = "theme-base-01"
     layoutReverse = false
     relatedPosts = true
