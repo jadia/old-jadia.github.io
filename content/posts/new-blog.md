@@ -1,7 +1,7 @@
 ---
 title: "New Blog design"
 date: 2019-09-20T14:13:00+05:30
-draft: true
+draft: false
 tags:
     - blog
 categories:
