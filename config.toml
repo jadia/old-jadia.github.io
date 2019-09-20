@@ -14,7 +14,7 @@ paginate = 7
 
 [params]
     author = "Nitish Jadia"
-    authorimage = "jadia.jpeg"
+    authorimage = "/jadia.jpeg"
     themeColor = "theme-base-01"
     layoutReverse = false
     relatedPosts = true
@@ -53,7 +53,7 @@ paginate = 7
 
 [params.social]
     github = "jadia"
-	twitter = "nitishjadia"
+    twitter = "nitishjadia"
     linkedin = "jadianitish"
     keybase = "jadia"
 
@@ -82,5 +82,4 @@ paginate = 7
     name  = "date"
     weight = 10
     pattern = "2006"
-
 
