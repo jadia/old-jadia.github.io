@@ -14,7 +14,7 @@ paginate = 7
 
 [params]
     author = "Nitish Jadia"
-#    authorimage = "/images/jadia.jpeg"
+    authorimage = "jadia.jpeg"
     themeColor = "theme-base-01"
     layoutReverse = false
     relatedPosts = true
