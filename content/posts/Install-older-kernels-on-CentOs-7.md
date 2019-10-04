@@ -1,7 +1,7 @@
 ---
 title: "Install Old Linux Kernel on CentOS 7"
 date: 2019-09-20T12:44:40+05:30
-draft: true
+draft: false
 description: "Simple guide to install different (preferably older) kernel version on CentOS 7."
 tags:
     - linux
