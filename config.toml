@@ -4,7 +4,7 @@ title = "Nitish Jadia"
 theme = "hyde-hyde"
 author = "Nitish Jadia"
 
-#googleAnalytics = ""
+googleAnalytics = "UA-61932410-4"
 disqusShortname = "jadia-dev"
 enableRobotsTXT = true
 enableEmoji = true
