@@ -21,7 +21,7 @@ paginate = 7
     relatedPosts = true
     dateformat = "Jan 2, 2006"
     postNavigation = true
-    copyright = "Nitish"
+    copyright = "Nitish Jadia"
     showBuiltWith = false
     mainSections = ["posts", "notes"]
     highlightjs = true
@@ -32,7 +32,7 @@ paginate = 7
 
 [params.meta]
     description = "Nitish Jadia's blog :: Just trying to RTFM!"
-    keywords = "blog,nitish,nitishjadia,jadia.dev,jadia,python,software,engineer,golang,programming,rant"
+    keywords = "blog,nitish,nitishjadia,jadia.dev,jadia,python,software,engineer,golang,programming,rant, nitish jadia"
 
 [[menu.main]]
     name = "Home"
